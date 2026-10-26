@@ -7,7 +7,8 @@ import ffmpegStatic from "ffmpeg-static";
 const execFileAsync = promisify(execFile);
 
 export function injectFFmpegPath() {
-  let ffmpegBin = ffmpegStatic;
+  // ponytail: FFMPEG_PATH wins; ffmpeg-static lacks azmq which playStream's audio graph needs
+  let ffmpegBin = process.env.FFMPEG_PATH || ffmpegStatic;
 
   if (ffmpegBin && fs.existsSync(ffmpegBin)) {
     const ffmpegDir = path.dirname(ffmpegBin);

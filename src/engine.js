@@ -94,7 +94,8 @@ export class StreamEngine {
       });
 
       streamer.client.on("voiceStateUpdate", (oldState, newState) => {
-        if (!this.isRunning || newState.id !== streamer.user.id) return;
+        // ignore the voice leave that startStreamerBroadcast triggers itself (caused a 5s rejoin loop)
+        if (!this.isRunning || newState.id !== streamer.user.id || streamer.isStartingBroadcast) return;
 
         if (!newState.channelId) {
           this.dashboard.addLog(`Streamer ${streamer.user.username} disconnected! Rejoining in 5s...`, "warn");
